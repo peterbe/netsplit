@@ -4,9 +4,11 @@ var routes = {
   '/summary': '#summary'
 };
 
+var STATE;
 var remote = 'http://localhost:5000';
 
 var $currentSection = null;
+
 
 define(function(require) {
   var $ = require('zepto');
@@ -44,7 +46,9 @@ define(function(require) {
         to: $toInput.val()
       });
     });
-    $.post(remote + '/event', {data: JSON.stringify(rows)});
+    $.post(remote + '/event', {data: JSON.stringify(rows)}, function(response) {
+      STATE = JSON.parse(response);
+    });
   });
 
 });
