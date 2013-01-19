@@ -4,7 +4,7 @@ var routes = {
   '/summary': '#summary'
 };
 
-var remote = 'localhost';
+var remote = 'http://localhost:5000';
 
 var $currentSection = null;
 
@@ -44,8 +44,7 @@ define(function(require) {
         to: $toInput.val()
       });
     });
-
-    $.post(remote + '/event', JSON.stringify(rows));
+    $.post(remote + '/event', {data: JSON.stringify(rows)});
   });
 
 });

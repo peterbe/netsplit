@@ -24,7 +24,7 @@ class FlaskrTestCase(unittest.TestCase):
         event_data = [
           {'from': 'E', 'to': 'P', 'amount': 10},
         ]
-        response = self.app.post('/event', data=json.dumps(event_data))
+        response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
         assert state_data[0]['from'] == 'E'
         assert state_data[0]['to'] == 'P'
@@ -33,7 +33,7 @@ class FlaskrTestCase(unittest.TestCase):
         event_data = [
             {'from': 'P', 'to': 'E', 'amount': 7},
         ]
-        response = self.app.post('/event', data=json.dumps(event_data))
+        response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
         assert state_data[0]['from'] == 'E'
         assert state_data[0]['to'] == 'P'
@@ -45,7 +45,7 @@ class FlaskrTestCase(unittest.TestCase):
             app.serialize('L', 'P', 10),
             app.serialize('M', 'P', 5),
         ]
-        response = self.app.post('/event', data=json.dumps(event_data))
+        response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
         assert app.serialize('E', 'P', 10) in state_data
@@ -57,7 +57,7 @@ class FlaskrTestCase(unittest.TestCase):
             app.serialize('E', 'M', 10),
             app.serialize('L', 'M', 10),
         ]
-        response = self.app.post('/event', data=json.dumps(event_data))
+        response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
         assert app.serialize('E', 'M', 10) in state_data
@@ -71,7 +71,7 @@ class FlaskrTestCase(unittest.TestCase):
             app.serialize('P', 'L', 12),
             app.serialize('M', 'L', 12),
         ]
-        response = self.app.post('/event', data=json.dumps(event_data))
+        response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
         assert app.serialize('P', 'L', 2) in state_data
@@ -86,7 +86,7 @@ class FlaskrTestCase(unittest.TestCase):
             app.serialize('L', 'E', 7),
             app.serialize('M', 'E', 7),
         ]
-        response = self.app.post('/event', data=json.dumps(event_data))
+        response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
         assert app.serialize('E', 'P', 3) in state_data

@@ -21,9 +21,10 @@ def serialize(from_, to, amount):
 
 @app.route("/event", methods=['POST'])
 def event():
-    data = json.loads(request.data)
+    raw = request.form.get('data')
+    data = json.loads(raw)
     for debt in data:
-        add_debt(debt['from'], debt['to'], debt['amount'])
+        add_debt(debt['from'], debt['to'], int(debt['amount']))
 
     current_debts = []
     for (from_, to), amount in STATE.items():
@@ -36,7 +37,7 @@ def event():
     response = make_response(json.dumps(current_debts))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
-    #return json.dumps(current_debts)
+
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
