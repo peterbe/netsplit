@@ -33,7 +33,10 @@ def event():
         row = serialize(from_, to, amount)
         current_debts.append(row)
 
-    return json.dumps(current_debts)
+    response = make_response(json.dumps(current_debts))
+    response.headers['Access-Control-Allow-Origin'] = '*'
+    return response
+    #return json.dumps(current_debts)
 
 if __name__ == "__main__":
     app.run(debug=True, host='0.0.0.0')
