@@ -1,7 +1,7 @@
 var routes = {
-  '/': '#main',
-  '/new-event': '#new-event',
-  '/summary': '#summary'
+  '/': main,
+  '/new-event': new_event,
+  '/summary': summary
 };
 
 var STATE;
@@ -10,9 +10,54 @@ var remote = 'http://localhost:5000';
 var $currentSection = null;
 
 
+/* Views */
+function main() {
+  $currentSection.hide();
+  $currentSection = $('#main').show();
+}
+
+function summary() {
+  $currentSection.hide();
+  $currentSection = $('#summary').show();
+  summaryUpdate();
+}
+
+function summaryUpdate() {
+  $ul = $currentSection.find('ul');
+
+  $.each(STATE, function() {
+    $ul.append('<li>{from} owes {to} ${amount}.</li>'.format(this));
+  });
+}
+
+function new_event() {
+  $currentSection.hide();
+  $currentSection = $('#new-event').show();
+  $('#new-event .froms').html('');
+  newEventAddFromRow();
+}
+
+newEventFromRowTemplate =
+'<div class="row from">' +
+'  <input type="text" name="from" value="{from}" placeholder="Name"/>' +
+'  <input type="text" name="amount" value="{amount}" placeholder="$"/>' +
+'</div>';
+
+function newEventAddFromRow() {
+  var $lastRow = $('#new-event input.from').last();
+  var data = {from: '', amount: ''};
+  if ($lastRow.length) {
+    data['from'] = $lastRow.find('input[name=from]').val();
+    data['amount'] = $lastRow.find('input[name=amount]').val();
+  }
+  var $newRow = $(newEventFromRowTemplate.format(data));
+  $('#new-event .froms').append($newRow);
+}
+
 define(function(require) {
   var $ = require('zepto');
   require('./install-button');
+  require('./utils');
 
   // Write your app here.
 
@@ -27,8 +72,7 @@ define(function(require) {
 
   $('#new-event .add-row').on('click', function(ev) {
     ev.preventDefault();
-    var $newRow = $('#new-event .from').last().clone();
-    $('#new-event .from').last().after($newRow);
+    newEventAddFromRow();
   });
 
   $('#new-event [type=submit]').on('click', function(ev) {
@@ -47,10 +91,16 @@ define(function(require) {
       });
     });
     $.post(remote + '/event', {data: JSON.stringify(rows)}, function(response) {
+      console.log('got response');
       STATE = JSON.parse(response);
+      $('#new-event').append('Done');
     });
   });
 
+  $.getJSON('/state', function(data) {
+    STATE = data;
+    summaryUpdate();
+  });
 });
 
 window.onpopstate = function() {
@@ -60,8 +110,6 @@ window.onpopstate = function() {
 };
 
 function changeSection(href) {
-    history.pushState({}, "", '#' + href);
-    var selector = routes[href];
-    $currentSection.hide();
-    $currentSection = $(selector).show();
+  history.pushState({}, "", '#' + href);
+  routes[href]();
 }
