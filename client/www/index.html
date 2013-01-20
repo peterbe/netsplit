@@ -29,43 +29,36 @@
 
     <section id="new-event">
       <header>
-        <a class="nav back" href="/">Back</a>
+        <a class="nav back" href="/"></a>
         <h1>New Event</h1>
       </header>
       <div class="content">
-        <form>
-          <div class="row from">
-            <input type="text" name="from" />
-            <input type="text" name="amount" />
-          </div>
+        <h1>Who Owes?</h1>
 
-          <div class="row">
-            <a href="javascript:void();" class="add-row">Add row</a>
-          </div>
+        <div class="froms">
+        </div>
+        <div class="row">
+          <a href="javascript:void();" class="add-row button">Add person</a>
+        </div>
 
-          <div class="row to">
-            <input type="text" name="to" value=""/>
-            <input type="submit" value="Create" />
-          </div>
-        </form>
+        <h1>To who?</h1>
+        <div class="row to">
+          <input type="text" name="to" value=""/>
+          <a href="javascript:void();" class="create button">Create</a>
+        </div>
       </div>
     </section>
 
     <section id="summary">
       <header>
-        <a class="nav back" href="/">Back</a>
+        <a class="nav back" href="/"></a>
         <h1>Summary</h1>
       </header>
       <div class="content">
-        Todo.
+        <ul></ul>
       </div>
     </section>
 
-
-    <!-- Using require.js, a module system for javascript, include the
-         js files. This loads "main.js", which in turn can load other
-         files, all handled by require.js:
-         http://requirejs.org/docs/api.html#jsfiles -->
     <script type="text/javascript"
             data-main="js/init.js"
             src="js/lib/require.js"></script>
