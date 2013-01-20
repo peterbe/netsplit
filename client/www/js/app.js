@@ -5,8 +5,8 @@ var routes = {
 };
 
 var STATE;
-//var remote = 'http://localhost:5000';
-var remote = 'http://www.peterbe.com:5000';
+var remote = 'http://localhost:5000';
+//var remote = 'http://www.peterbe.com:5000';
 
 var $currentSection = null;
 
@@ -98,9 +98,12 @@ define(function(require) {
     });
   });
 
-  $.getJSON('/state', function(data) {
+  $.getJSON(remote + '/state', function(data) {
+    console.log('loading state');
+    console.log(data);
     STATE = data;
     summaryUpdate();
+    console.log(STATE);
   });
 });
 
