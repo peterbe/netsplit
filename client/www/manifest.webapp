@@ -4,9 +4,9 @@
   "description": "Who owes who want for lunch?",
   "launch_path": "/",
   "icons": {
-    "16": "/img/icons/mortar-16.png",
-    "48": "/img/icons/mortar-48.png",
-    "128": "/img/icons/mortar-128.png"
+    "16": "/img/icons/wallet-16.png",
+    "48": "/img/icons/wallet-48.png",
+    "128": "/img/icons/wallet-128.png"
   },
   "developer": {
     "name": "Mike Cooper and Peter Bengtsson",
