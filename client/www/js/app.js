@@ -5,8 +5,8 @@ var routes = {
 };
 
 var STATE;
-var remote = 'http://localhost:5000';
-//var remote = 'http://www.peterbe.com:5000';
+//var remote = 'http://localhost:5000';
+var remote = 'http://www.peterbe.com:5000';
 
 var $currentSection = null;
 
