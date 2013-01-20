@@ -6,7 +6,7 @@ import tempfile
 import app
 
 
-class FlaskrTestCase(unittest.TestCase):
+class AppTestCase(unittest.TestCase):
 
     def setUp(self):
         #self.db_fd, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
@@ -39,7 +39,22 @@ class FlaskrTestCase(unittest.TestCase):
         assert state_data[0]['to'] == 'P'
         assert state_data[0]['amount'] == 3
 
-    def test_scenario1(self):
+    def test_getting_state(self):
+        event_data = [
+          {'from': 'E', 'to': 'P', 'amount': 10},
+        ]
+        self.app.post('/event', data=dict(data=json.dumps(event_data)))
+        event_data = [
+            {'from': 'P', 'to': 'E', 'amount': 7},
+        ]
+        self.app.post('/event', data=dict(data=json.dumps(event_data)))
+        response = self.app.get('/state')
+        state_data = json.loads(response.data)
+        assert state_data[0]['from'] == 'E'
+        assert state_data[0]['to'] == 'P'
+        assert state_data[0]['amount'] == 3
+
+    def test_simple_scenario(self):
         event_data = [
             app.serialize('E', 'P', 10),
             app.serialize('L', 'P', 10),
