@@ -10,7 +10,7 @@
   },
   "developer": {
     "name": "Mike Cooper and Peter Bengtsson",
-    "url": "http://yourawesomeapp.com"
+    "url": "http://www.peterbe.com/netsplit/index.html"
   },
   "installs_allowed_from": ["*"],
   "appcache_path": "/cache.manifest",
