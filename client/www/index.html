@@ -7,9 +7,10 @@
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width">
 
-    <!-- Place favicon.ico in the root directory -->
     <link rel="stylesheet" href="css/lib/normalize.css">
-    <link rel="stylesheet" href="css/netsplit.css">
+    <link rel="stylesheet/less" type="text/css" href="css/netsplit.less">
+
+    <script src="js/lib/less-1.3.1.min.js"></script>
   </head>
   <body>
     <!-- Use this installation button to install locally without going
@@ -17,31 +18,47 @@
     <button id="install-btn">Install</button>
 
     <section id="main">
-      <a class="nav" href="/new-event">New Event</a>
-      <a class="nav" href="/summary">Summary</a>
+      <header>
+        <h1>NetSplit</h1>
+      </header>
+      <div class="content">
+        <a class="nav" href="/new-event">New Event</a>
+        <a class="nav" href="/summary">Summary</a>
+      </div>
     </section>
 
     <section id="new-event">
-      <form>
-        <div class="row from">
-          <input type="text" name="from" />
-          <input type="text" name="amount" />
-        </div>
+      <header>
+        <a class="nav back" href="/">Back</a>
+        <h1>New Event</h1>
+      </header>
+      <div class="content">
+        <form>
+          <div class="row from">
+            <input type="text" name="from" />
+            <input type="text" name="amount" />
+          </div>
 
-        <div class="row">
-          <a href="" class="add-row">Add row</a>
-        </div>
+          <div class="row">
+            <a href="javascript:void();" class="add-row">Add row</a>
+          </div>
 
-        <div class="row to">
-          <input type="text" name="to" value=""/>
-          <input type="submit" value="Create" />
-        </div>
-
-      </form>
+          <div class="row to">
+            <input type="text" name="to" value=""/>
+            <input type="submit" value="Create" />
+          </div>
+        </form>
+      </div>
     </section>
 
     <section id="summary">
-      Todo.
+      <header>
+        <a class="nav back" href="/">Back</a>
+        <h1>Summary</h1>
+      </header>
+      <div class="content">
+        Todo.
+      </div>
     </section>
 
 

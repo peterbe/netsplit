@@ -18,7 +18,7 @@ define(function(require) {
 
   $currentSection = $('#main').show();
 
-  $('#main .nav').on('click', function(ev) {
+  $('a.nav').on('click', function(ev) {
     ev.preventDefault();
     var $this = $(this);
     var href= $this.attr('href');
