@@ -23,7 +23,7 @@ function summary() {
 }
 
 function summaryUpdate() {
-  $ul = $currentSection.find('ul');
+  $ul = $currentSection.find('ul').html('');
 
   $.each(STATE, function() {
     $ul.append('<li>{from} owes {to} ${amount}.</li>'.format(this));
@@ -75,7 +75,7 @@ define(function(require) {
     newEventAddFromRow();
   });
 
-  $('#new-event [type=submit]').on('click', function(ev) {
+  $('#new-event a.create').on('click', function(ev) {
     ev.preventDefault();
 
     var rows = [];
