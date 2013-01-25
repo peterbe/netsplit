@@ -1,24 +1,33 @@
 @padding: 15px;
 
-body {
-  background: #042029 url("../img/grain.png");
+html {
+  overflow: hidden;
 }
 
 input {
   margin-bottom: 6px;
 }
 
-section {
-  display: none;
-  background: #fff;
-  border-radius: 10px;
+#app {
   margin: auto;
+  overflow: hidden;
   width: 320px;
-  min-height: 240px;
+}
+
+section {
+  background: #ddd url("../img/grain.png");
+  display: none;
+  height: 100%;
+  left: 0;
+  position: absolute;
+  top: 0;
+  transform: translate(0, 0);
+  transition: .5s transform;
+  width: 100%;
 
   header {
-    border-radius: 10px 10px 0 0;
-    background-color: #a8a8a8;
+    background: linear-gradient(to top, #042029, #093848);
+    color: #fff;
     padding: @padding;
 
     h1 {
@@ -35,6 +44,7 @@ section {
         color: rgba(255, 255, 255, 0.5);
         font-weight: bold;
         font-size: 1.5em;
+        line-height: 0.8em;
       }
     }
   }
@@ -47,21 +57,28 @@ section {
       font-size: 1.2em;
     }
   }
-}
 
-#new-event {
-  .froms {
-    input[name=from] {
-      width: 230px;
-    }
-    input[name=amount] {
-      width: 30px;
+  &.right {
+    transform: translate(100%, 0);
+  }
+
+  &.left {
+    transform: translate(-100%, 0);
+  }
+
+  #new-event {
+    .froms {
+      input[name=from] {
+        width: 230px;
+      }
+      input[name=amount] {
+        width: 30px;
+      }
     }
   }
 }
 
-
-/* Normal Buttons ---------------------- */
+/* Button library ---------------------- */
 .button { width: auto; background: #2ba6cb; border: 1px solid #1e728c; -webkit-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset; -moz-box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset; box-shadow: 0 1px 0 rgba(255, 255, 255, 0.5) inset; color: white; cursor: pointer; display: inline-block; font-family: inherit; font-size: 14px; font-weight: bold; line-height: 1; margin: 0; padding: 10px 20px 11px; position: relative; text-align: center; text-decoration: none; -webkit-transition: background-color 0.15s ease-in-out; -moz-transition: background-color 0.15s ease-in-out; -o-transition: background-color 0.15s ease-in-out; transition: background-color 0.15s ease-in-out; /* Hovers */ /* Sizes */ /* Colors */ /* Radii */ /* Layout */ /* Disabled ---------- */ }
 .button:hover, .button:focus { color: white; background-color: #2284a1; }
 .button:active { -webkit-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset; -moz-box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset; box-shadow: 0 1px 0 rgba(0, 0, 0, 0.2) inset; }

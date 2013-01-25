@@ -17,47 +17,51 @@
          through the marketpace (see app.js) -->
     <!--<button id="install-btn">Install</button>-->
 
-    <section id="main">
-      <header>
-        <h1>NetSplit</h1>
-      </header>
-      <div class="content">
-        <a class="nav button" href="/new-event">New Event</a>
-        <a class="nav button" href="/summary">Summary</a>
-      </div>
-    </section>
+    <div id="app">
 
-    <section id="new-event">
-      <header>
-        <a class="nav back" href="/"></a>
-        <h1>New Event</h1>
-      </header>
-      <div class="content">
-        <h1>Who Owes?</h1>
-
-        <div class="froms">
+      <section id="main">
+        <header>
+          <h1>NetSplit</h1>
+        </header>
+        <div class="content">
+          <a class="nav button" href="/new-event">New Event</a>
+          <a class="nav button" href="/summary">Summary</a>
         </div>
-        <div class="row">
-          <a href="javascript:void();" class="add-row button">Add person</a>
-        </div>
+      </section>
 
-        <h1>To who?</h1>
-        <div class="row to">
-          <input type="text" name="to" value=""/>
-          <a href="javascript:void();" class="create button">Create</a>
-        </div>
-      </div>
-    </section>
+      <section id="new-event">
+        <header>
+          <a class="nav back" href="/"></a>
+          <h1>New Event</h1>
+        </header>
+        <div class="content">
+          <h1>Who Owes?</h1>
 
-    <section id="summary">
-      <header>
-        <a class="nav back" href="/"></a>
-        <h1>Summary</h1>
-      </header>
-      <div class="content">
-        <ul></ul>
-      </div>
-    </section>
+          <div class="froms">
+          </div>
+          <div class="row">
+            <a href="javascript:void();" class="add-row button">Add person</a>
+          </div>
+
+          <h1>To who?</h1>
+          <div class="row to">
+            <input type="text" name="to" value=""/>
+            <a href="javascript:void();" class="create button">Create</a>
+          </div>
+        </div>
+      </section>
+
+      <section id="summary">
+        <header>
+          <a class="nav back" href="/"></a>
+          <h1>Summary</h1>
+        </header>
+        <div class="content">
+          <ul></ul>
+        </div>
+      </section>
+
+    </div>
 
     <script type="text/javascript"
             data-main="js/init.js"
