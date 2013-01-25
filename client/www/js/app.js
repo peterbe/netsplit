@@ -5,25 +5,25 @@ define(function(require) {
   require('./install-button');
   require('./utils');
 
-  var routes = {
-    '/': { controller: main, section: '#main' },
-    '/new-event': { controller: new_event, section: '#new-event' },
-    '/summary': { controller: summary, section: '#summary' }
-  };
-
-  var STATE;
+  var STATE = [];
   //var remote = 'http://localhost:5000';
   var remote = 'http://www.peterbe.com:5000';
 
-  var $currentSection = null;
+  var routes = {
+    '/': { controller: main, selector: '#main' },
+    '/new-event': { controller: new_event, selector: '#new-event' },
+    '/summary': { controller: summary, selector: '#summary' }
+  };
 
+  var paneOrder = ['#main', '#new-event', '#summary'];
+  var currentPane = null;
 
   /* Views */
   function main() {
   }
 
   function summary() {
-    $ul = $currentSection.find('ul').html('');
+    $ul = $(currentPane).find('ul').html('');
 
     $.each(STATE, function() {
       $ul.append('<li>{from} owes {to} ${amount}.</li>'.format(this));
@@ -57,7 +57,12 @@ define(function(require) {
     ev.preventDefault();
     var $this = $(this);
     var href= $this.attr('href');
-    changeSection(href);
+    changePane(href);
+  });
+
+  $('a.back').on('click', function(ev) {
+    ev.preventDefault();
+    window.history.back();
   });
 
   $('#new-event .add-row').on('click', function(ev) {
@@ -95,54 +100,62 @@ define(function(require) {
     console.log(STATE);
   });
 
+  /* View switching */
   window.onpopstate = function() {
-    console.log('popstate');
-    var href = document.location.hash;
-    changeSection(href);
+    // Chop off leading '#'
+    var href = document.location.hash.slice(1)
+    if (href === '') {
+      href = '/';
+    }
+    changePane(href, false);
   };
 
-
-  /* View switching */
-  $currentSection = $('#main');
-
-  var order = ['main', 'new-event', 'summary'];
-
-  for (var i=0; i<order.length; i++) {
-    var section = order[i];
-    if (section != 'main') {
-      $('#' + section).addClass(rel(section, 'main'));
-    }
-  }
-
-  $('section').show();
-
   function rel(s1, s2) {
-    var i1 = order.indexOf(s1);
-    var i2 = order.indexOf(s2);
+    var i1 = paneOrder.indexOf(s1);
+    var i2 = paneOrder.indexOf(s2);
 
     return i1 > i2 ? 'right' : 'left';
   }
 
-  function changeSection(href) {
+  function changePane(href, push) {
+    if (push === undefined) push = true;
     var route = routes[href];
 
-    if (route.section) {
-      var $oldSection = $currentSection;
-      var $newSection = $(route.section);
+    var $oldSection = $(currentPane);
+    var $newSection = $(route.selector);
 
-      var oldId = $oldSection.attr('id');
-      var newId = $newSection.attr('id');
+    var oldPane = '#' + $oldSection.attr('id');
+    var newPane = '#' + $newSection.attr('id');
 
-      $oldSection.addClass(rel(oldId, newId));
-      $newSection.removeClass(rel(newId, oldId));
-      $currentSection = $newSection;
+    $oldSection.addClass(rel(oldPane, newPane));
+    $newSection.removeClass(rel(newPane, oldPane));
+
+    routes[href].controller();
+
+    if (push) {
+      history.pushState({}, "", '#' + href);
     }
-
-    if (route.controller) {
-      routes[href].controller();
-    }
-
-    history.pushState({}, "", '#' + href);
+    currentPane = newPane;
   }
+
+  $(function init() {
+    console.log('calling init');
+    if (document.location.hash.length) {
+      var href = location.hash.slice(1);
+      currentPane = routes[href].selector;
+      window.onpopstate();
+    } else {
+      currentPane = '#main';
+    }
+
+    for (var i=0; i < paneOrder.length; i++) {
+      var pane = paneOrder[i];
+      if (pane != currentPane) {
+        $(pane).addClass(rel(pane, currentPane));
+      }
+    }
+
+    $('section').show();
+  });
 
 });
