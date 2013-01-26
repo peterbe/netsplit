@@ -1,0 +1,5 @@
+* Ability to Persona log in on the server
+
+* Store keys<->emails so a client can send authenticated POSTs
+
+* Filter the /state view based on the email (from key)
