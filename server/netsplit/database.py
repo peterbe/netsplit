@@ -3,12 +3,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import scoped_session, sessionmaker
 from sqlalchemy.ext.declarative import declarative_base
 
-print "URI", os.environ.get(
-        'DATABASE_URI',
-        'postgresql://localhost/netsplit'
-    )
 engine = create_engine(
-    #'sqlite:////tmp/test.db',
     os.environ.get(
         'DATABASE_URI',
         'postgresql://localhost/netsplit'
@@ -29,5 +24,5 @@ def init_db():
     # import all modules here that might define models so that
     # they will be registered properly on the metadata.  Otherwise
     # you will have to import them first before calling init_db()
-    import models
+    from netsplit import models
     Base.metadata.create_all(bind=engine)

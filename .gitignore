@@ -1,2 +1,3 @@
 *.pyc
 client/node_modules/
+server/netsplit/tests/netsplit_test.db

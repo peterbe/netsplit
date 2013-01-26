@@ -3,7 +3,6 @@ import json
 
 from flask import Flask, abort, make_response, request
 
-DATABASE = 'netsplit'
 DEBUG = True
 SECRET_KEY = 'development key'
 
@@ -11,13 +10,11 @@ app = Flask(__name__)
 app.config.from_object(__name__)
 app.config.from_envvar('NETSPLIT_SETTINGS', silent=True)
 
-STATE = {}
-
-
-from database import db_session, init_db
-from models import Debt
+from netsplit.database import db_session, init_db
+from netsplit.models import Debt
 
 init_db()
+
 
 @app.teardown_request
 def shutdown_session(exception=None):
@@ -85,5 +82,5 @@ def event():
     return response
 
 
-if __name__ == "__main__":
-    app.run(debug=True, host='0.0.0.0')
+#if __name__ == "__main__":
+#    app.run(debug=True, host='0.0.0.0')

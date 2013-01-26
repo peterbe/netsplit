@@ -1,34 +1,39 @@
 import os
 import unittest
 import json
-import tempfile
 from nose.tools import eq_, ok_
 
-import app
+from netsplit import app
+from netsplit.models import Debt
 
 
 class AppTestCase(unittest.TestCase):
 
     def setUp(self):
-        #app.app.config['DATABASE_URI'] = 'postgresql://localhost/netsplit_test'
-        #os.environ['DATABASE_URI'] = 'postgresql://localhost/netsplit_test'
         app.app.config['TESTING'] = True
         self.app = app.app.test_client()
         # would be nice to somehow check the URI used as *_test
-        #print app.db_session
         app.init_db()
-        #app.STATE = {}
 
     def tearDown(self):
-        #app.STATE = {}
-        #os.close(self.db_fd)
-        #os.unlink(flaskr.app.config['DATABASE'])
-        #app.db_session.flush()
-        from models import Debt
+        # XXX because I don't know how to delete the entire table contents
         for each in Debt.query.all():
             app.db_session.delete(each)
         app.db_session.commit()
-        #print dir(app.db_session)
+
+    def test_add_debt(self):
+        func = app.add_debt
+        app.add_debt('E', 'P', 10)
+        eq_(Debt.query.filter(Debt.from_ == 'E').first().amount, 10.0)
+
+        app.add_debt('P', 'E', 7)
+        eq_(Debt.query.filter(Debt.from_ == 'E').first().amount, 3.0)
+
+        app.add_debt('P', 'E', 2)
+        eq_(Debt.query.filter(Debt.from_ == 'E').first().amount, 1.0)
+
+        app.add_debt('P', 'E', 4)
+        eq_(Debt.query.filter(Debt.from_ == 'E').first().amount, -3.0)
 
     def test_posting_event(self):
         event_data = [
@@ -73,9 +78,9 @@ class AppTestCase(unittest.TestCase):
         response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
-        assert app.serialize('E', 'P', 10) in state_data
-        assert app.serialize('L', 'P', 10) in state_data
-        assert app.serialize('M', 'P', 5) in state_data
+        ok_(app.serialize('E', 'P', 10) in state_data)
+        ok_(app.serialize('L', 'P', 10) in state_data)
+        ok_(app.serialize('M', 'P', 5) in state_data)
 
         # 2
         event_data = [
@@ -85,11 +90,11 @@ class AppTestCase(unittest.TestCase):
         response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
-        assert app.serialize('E', 'M', 10) in state_data
-        assert app.serialize('L', 'M', 10) in state_data
-        assert app.serialize('E', 'P', 10) in state_data
-        assert app.serialize('L', 'P', 10) in state_data
-        assert app.serialize('M', 'P', 5) in state_data
+        ok_(app.serialize('E', 'M', 10) in state_data)
+        ok_(app.serialize('L', 'M', 10) in state_data)
+        ok_(app.serialize('E', 'P', 10) in state_data)
+        ok_(app.serialize('L', 'P', 10) in state_data)
+        ok_(app.serialize('M', 'P', 5) in state_data)
 
         # 3
         event_data = [
@@ -99,11 +104,11 @@ class AppTestCase(unittest.TestCase):
         response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
-        assert app.serialize('P', 'L', 2) in state_data
-        assert app.serialize('M', 'L', 2) in state_data
-        assert app.serialize('E', 'P', 10) in state_data
-        assert app.serialize('E', 'M', 10) in state_data
-        assert app.serialize('M', 'P', 5) in state_data
+        ok_(app.serialize('P', 'L', 2) in state_data)
+        ok_(app.serialize('M', 'L', 2) in state_data)
+        ok_(app.serialize('E', 'P', 10) in state_data)
+        ok_(app.serialize('E', 'M', 10) in state_data)
+        ok_(app.serialize('M', 'P', 5) in state_data)
 
         # 4
         event_data = [
@@ -114,12 +119,12 @@ class AppTestCase(unittest.TestCase):
         response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
 
-        assert app.serialize('E', 'P', 3) in state_data
-        assert app.serialize('L', 'E', 7) in state_data
-        assert app.serialize('E', 'M', 3) in state_data
-        assert app.serialize('P', 'L', 2) in state_data
-        assert app.serialize('M', 'L', 2) in state_data
-        assert app.serialize('M', 'P', 5) in state_data
+        ok_(app.serialize('E', 'P', 3) in state_data)
+        ok_(app.serialize('L', 'E', 7) in state_data)
+        ok_(app.serialize('E', 'M', 3) in state_data)
+        ok_(app.serialize('P', 'L', 2) in state_data)
+        ok_(app.serialize('M', 'L', 2) in state_data)
+        ok_(app.serialize('M', 'P', 5) in state_data)
 
 
 if __name__ == '__main__':

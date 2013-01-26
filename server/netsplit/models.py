@@ -1,5 +1,5 @@
 from sqlalchemy import Column, Integer, String, Numeric
-from database import Base
+from netsplit.database import Base
 
 
 class Debt(Base):

@@ -4,3 +4,19 @@ Mike Cooper and Peter Bengtsson nerding up an app at the
 
 This apps makes it possible for you to easily who owes who what for
 group lunches. Sort of.
+
+
+Running the server
+------------------
+
+Simple, just run it like this:
+
+    $ cd server
+    $ # create your virtualenv if you haven't done so
+    $ pip install -r requirements.txt
+    $ ./run.py
+
+To run the server tests:
+
+    $ cd server
+    $ nosetests netsplit
