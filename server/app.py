@@ -2,17 +2,44 @@
 import json
 
 from flask import Flask, abort, make_response, request
-app = Flask(__name__)
 
+DATABASE = 'netsplit'
+DEBUG = True
+SECRET_KEY = 'development key'
+
+app = Flask(__name__)
+app.config.from_object(__name__)
+app.config.from_envvar('NETSPLIT_SETTINGS', silent=True)
 
 STATE = {}
+
+
+from database import db_session, init_db
+from models import Debt
+
+init_db()
+
+@app.teardown_request
+def shutdown_session(exception=None):
+    db_session.remove()
+
 
 def add_debt(from_, to, amount):
     if from_ > to:
         amount *= -1
         from_, to = to, from_
     tup = (from_, to)
-    STATE[tup] = STATE.get(tup, 0) + amount
+    cur = Debt.query.filter(
+        Debt.from_ == from_,
+        Debt.to == to
+    )
+    previous = cur.first()
+    if previous:
+        previous.amount += amount
+    else:
+        d = Debt(from_, to, amount)
+        db_session.add(d)
+    db_session.commit()
 
 
 def serialize(from_, to, amount):
@@ -21,21 +48,28 @@ def serialize(from_, to, amount):
 
 @app.route("/state", methods=['GET'])
 def state():
-    current_debts = _state_to_debts()
+    current_debts = _state_to_debts(None)
     response = make_response(json.dumps(current_debts))
     response.headers['Access-Control-Allow-Origin'] = '*'
     return response
 
 
-def _state_to_debts():
+def _state_to_debts(around=None):
+    if around:
+        raise NotImplementedError('work harder')
+
     current_debts = []
-    for (from_, to), amount in STATE.items():
+    for each in Debt.query.all():
+        from_ = each.from_
+        to = each.to
+        amount = float(each.amount)
         if amount < 0:
             from_, to = to, from_
             amount *= -1
         row = serialize(from_, to, amount)
         current_debts.append(row)
     return current_debts
+
 
 @app.route("/event", methods=['POST'])
 def event():

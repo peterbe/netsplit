@@ -2,6 +2,7 @@ import os
 import unittest
 import json
 import tempfile
+from nose.tools import eq_, ok_
 
 import app
 
@@ -9,16 +10,25 @@ import app
 class AppTestCase(unittest.TestCase):
 
     def setUp(self):
-        #self.db_fd, flaskr.app.config['DATABASE'] = tempfile.mkstemp()
+        #app.app.config['DATABASE_URI'] = 'postgresql://localhost/netsplit_test'
+        #os.environ['DATABASE_URI'] = 'postgresql://localhost/netsplit_test'
         app.app.config['TESTING'] = True
         self.app = app.app.test_client()
-        #flaskr.init_db()
-        app.STATE = {}
+        # would be nice to somehow check the URI used as *_test
+        #print app.db_session
+        app.init_db()
+        #app.STATE = {}
 
     def tearDown(self):
-        app.STATE = {}
+        #app.STATE = {}
         #os.close(self.db_fd)
         #os.unlink(flaskr.app.config['DATABASE'])
+        #app.db_session.flush()
+        from models import Debt
+        for each in Debt.query.all():
+            app.db_session.delete(each)
+        app.db_session.commit()
+        #print dir(app.db_session)
 
     def test_posting_event(self):
         event_data = [
@@ -26,18 +36,18 @@ class AppTestCase(unittest.TestCase):
         ]
         response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
-        assert state_data[0]['from'] == 'E'
-        assert state_data[0]['to'] == 'P'
-        assert state_data[0]['amount'] == 10
+        eq_(state_data[0]['from'], 'E')
+        eq_(state_data[0]['to'], 'P')
+        eq_(state_data[0]['amount'], 10.00)
 
         event_data = [
             {'from': 'P', 'to': 'E', 'amount': 7},
         ]
         response = self.app.post('/event', data=dict(data=json.dumps(event_data)))
         state_data = json.loads(response.data)
-        assert state_data[0]['from'] == 'E'
-        assert state_data[0]['to'] == 'P'
-        assert state_data[0]['amount'] == 3
+        eq_(state_data[0]['from'], 'E')
+        eq_(state_data[0]['to'], 'P')
+        eq_(state_data[0]['amount'], 3.00)
 
     def test_getting_state(self):
         event_data = [
@@ -50,9 +60,9 @@ class AppTestCase(unittest.TestCase):
         self.app.post('/event', data=dict(data=json.dumps(event_data)))
         response = self.app.get('/state')
         state_data = json.loads(response.data)
-        assert state_data[0]['from'] == 'E'
-        assert state_data[0]['to'] == 'P'
-        assert state_data[0]['amount'] == 3
+        eq_(state_data[0]['from'], 'E')
+        eq_(state_data[0]['to'], 'P')
+        eq_(state_data[0]['amount'], 3.00)
 
     def test_simple_scenario(self):
         event_data = [
