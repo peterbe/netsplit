@@ -7,7 +7,7 @@ define(function(require) {
 
   var STATE = [];
   //var remote = 'http://localhost:5000';
-  var remote = 'http://www.peterbe.com:5000';
+  var remote = 'http://ntsp.lt';
 
   var routes = {
     '/': { controller: main, selector: '#main' },
