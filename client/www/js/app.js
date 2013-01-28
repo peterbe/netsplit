@@ -79,11 +79,15 @@ define(function(require) {
     $toInput = $('#new-event .to input[name=to]');
 
     $fromRows.each(function() {
-      rows.push({
-        from: $('input[name=from]', this).val(),
-        amount: $('input[name=amount]', this).val(),
-        to: $toInput.val()
-      });
+      if ($('input[name=from]', this).val() && $('input[name=amount]', this).val()) {
+        rows.push({
+          from: $('input[name=from]', this).val(),
+          amount: $('input[name=amount]', this).val(),
+          to: $toInput.val()
+        });
+      } else if ($('input[name=from]', this).val() || $('input[name=amount]', this).val()) {
+        alert("You suck! Filled in one of the fields but not the other");
+      }
     });
     $.post(remote + '/event', {data: JSON.stringify(rows)}, function(response) {
       console.log('got response');
